@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MenuPro restaurant menu management dashboard">
+  <title>MenuPro | Restaurant Menu Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="brand brand-center"><span class="brand-mark">M</span><span>Menu<span class="brand-accent">Pro</span></span></div>
+      <p class="eyebrow">RESTAURANT MANAGEMENT</p>
+      <h1 id="authTitle">Welcome back</h1>
+      <p class="muted">Manage your menu, inventory, and restaurant performance.</p>
+      <form id="authForm">
+        <label>Full name <input id="authName" type="text" placeholder="Your name" autocomplete="name"></label>
+        <label>Email address <input id="authEmail" type="email" placeholder="admin@menupro.demo" required autocomplete="username"></label>
+        <label>Password <input id="authPassword" type="password" placeholder="Enter any password" required autocomplete="current-password"></label>
+        <label>Role <select id="authRole"><option>Admin</option><option>Manager</option><option>Staff</option></select></label>
+        <p id="authError" class="error-text"></p>
+        <button class="btn btn-primary full-width" type="submit" id="authSubmit">Sign in</button>
+      </form>
+      <p class="auth-switch"><span id="authSwitchText">New to MenuPro?</span> <button type="button" class="link-button" id="authSwitch">Create account</button></p>
+      <p class="demo-note">Demo access: use any valid email and password. No real account is created.</p>
+    </div>
+  </div>
+
+  <div id="app" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><span class="brand-mark">M</span><span>Menu<span class="brand-accent">Pro</span></span></div>
+      <div class="workspace"><span class="workspace-dot"></span><span><strong>Rosewood Kitchen</strong><small>Restaurant workspace</small></span></div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-list">
+        <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-link" data-page="items"><span>☷</span> Menu items <span class="nav-count" id="navItemCount">0</span></button>
+        <button class="nav-link" data-page="categories"><span>▤</span> Categories</button>
+        <button class="nav-link" data-page="digital"><span>◎</span> Digital menu</button>
+        <button class="nav-link" data-page="pricing"><span>＄</span> Pricing & offers</button>
+        <button class="nav-link" data-page="inventory"><span>▧</span> Inventory</button>
+        <button class="nav-link" data-page="dietary"><span>♧</span> Dietary tags</button>
+      </nav>
+      <p class="nav-label">INSIGHTS</p>
+      <nav class="nav-list">
+        <button class="nav-link" data-page="analytics"><span>▥</span> Analytics</button>
+        <button class="nav-link" data-page="versions"><span>◷</span> Version history</button>
+        <button class="nav-link" data-page="reports"><span>▣</span> Reports</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><span class="help-icon">✦</span><strong>Need a hand?</strong><p>Keep your menu fresh and up to date.</p><button class="text-action" data-page="reports">View reports →</button></div>
+        <button class="nav-link" id="darkModeBtn"><span>◐</span> Toggle dark mode</button>
+        <button class="nav-link" id="logoutBtn"><span>↪</span> Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button id="mobileMenuBtn" class="icon-button mobile-menu" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb"><span>Workspace</span><b>/</b><strong id="breadcrumbCurrent">Dashboard</strong></div>
+        <div class="topbar-actions">
+          <div class="today-pill"><span>●</span><span id="todayLabel">Today</span></div>
+          <button class="icon-button" id="quickAddBtn" title="Add menu item">＋</button>
+          <div class="user-chip"><div class="avatar" id="userAvatar">A</div><span><strong id="userName">Admin</strong><small id="userRole">Administrator</small></span></div>
+        </div>
+      </header>
+      <div class="page-content">
+        <section class="page active" id="page-dashboard">
+          <div class="page-heading"><div><p class="eyebrow">MONDAY, MADE DELICIOUS</p><h1>Good morning, <span id="greetingName">Admin</span> <span>✦</span></h1><p class="muted">Here's what's happening with your menu today.</p></div><button class="btn btn-primary" data-action="add-item">＋ Add menu item</button></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Total menu items</span><span class="stat-icon rose">☷</span></div><div class="stat-value" id="statItems">0</div><div class="stat-foot"><span class="trend up">↗ Live</span> across your menu</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Categories</span><span class="stat-icon lilac">▤</span></div><div class="stat-value" id="statCategories">0</div><div class="stat-foot">Organized collections</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Available items</span><span class="stat-icon mint">✓</span></div><div class="stat-value" id="statAvailable">0</div><div class="stat-foot"><span class="trend up">●</span> Ready to serve</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Low stock alerts</span><span class="stat-icon amber">⚠</span></div><div class="stat-value" id="statLowStock">0</div><div class="stat-foot">Ingredients need attention</div></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel popular-panel"><div class="panel-heading"><div><h2>Popular menu items</h2><p class="muted">Your guest favorites this week</p></div><button class="text-action" data-page="analytics">View analytics →</button></div><div id="popularList" class="popular-list"></div></article>
+            <article class="panel category-panel"><div class="panel-heading"><div><h2>Menu by category</h2><p class="muted">Your menu mix at a glance</p></div></div><div id="categorySummary" class="category-summary"></div></article>
+            <article class="panel alerts-panel"><div class="panel-heading"><div><h2>Inventory alerts</h2><span class="soft-badge" id="alertBadge">0 alerts</span></div><button class="text-action" data-page="inventory">Manage →</button></div><div id="dashboardAlerts" class="alert-list"></div></article>
+            <article class="panel activity-panel"><div class="panel-heading"><div><h2>Recent activity</h2><p class="muted">Latest changes to your menu</p></div><button class="text-action" data-page="versions">History →</button></div><div id="recentActivity" class="activity-list"></div></article>
+          </div>
+        </section>
+
+        <section class="page" id="page-items">
+          <div class="page-heading"><div><p class="eyebrow">YOUR OFFERING</p><h1>Menu items</h1><p class="muted">Create and manage every dish on your menu.</p></div><button class="btn btn-primary" data-action="add-item">＋ Add menu item</button></div>
+          <div class="panel table-panel"><div class="toolbar"><div class="search-box"><span>⌕</span><input id="itemSearch" placeholder="Search dishes..." type="search"></div><select id="itemCategoryFilter"><option value="">All categories</option></select><select id="itemStatusFilter"><option value="">All statuses</option><option>Available</option><option>Limited Stock</option><option>Out of Stock</option><option>New Item</option></select><button class="btn btn-secondary" id="exportMenuBtn">↓ Export CSV</button></div><div class="table-wrap"><table><thead><tr><th>ITEM</th><th>CATEGORY</th><th>PRICE</th><th>DIETARY</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody id="itemsTableBody"></tbody></table></div><div class="table-footer" id="itemsTableFooter"></div></div>
+        </section>
+
+        <section class="page" id="page-categories">
+          <div class="page-heading"><div><p class="eyebrow">KEEP IT ORGANIZED</p><h1>Categories</h1><p class="muted">Group dishes so guests can find their favorites.</p></div><button class="btn btn-primary" data-action="add-category">＋ Add category</button></div>
+          <div class="category-grid" id="categoryGrid"></div>
+        </section>
+
+        <section class="page" id="page-digital">
+          <div class="page-heading"><div><p class="eyebrow">GUEST EXPERIENCE</p><h1>Digital menu</h1><p class="muted">Preview the menu your customers see.</p></div><button class="btn btn-secondary" id="printMenuBtn">⎙ Print menu</button></div>
+          <div class="digital-header"><div><span class="digital-kicker">FRESH • LOCAL • LOVINGLY MADE</span><h2>Good food, <em>good mood.</em></h2><p>Discover our kitchen's seasonal favorites, made fresh just for you.</p></div><div class="digital-flower">✿</div></div>
+          <div class="digital-toolbar"><div id="digitalCategories" class="category-pills"></div><div class="search-box"><span>⌕</span><input id="digitalSearch" type="search" placeholder="Find something delicious"></div></div>
+          <div id="digitalMenuGrid" class="digital-menu-grid"></div>
+        </section>
+
+        <section class="page" id="page-pricing">
+          <div class="page-heading"><div><p class="eyebrow">SMART PRICING</p><h1>Pricing & offers</h1><p class="muted">Set prices, discounts, and daily specials.</p></div><button class="btn btn-primary" data-action="add-offer">＋ Create offer</button></div>
+          <div class="stats-grid compact-stats"><article class="stat-card"><div class="stat-top"><span>Menu average price</span><span class="stat-icon rose">＄</span></div><div class="stat-value" id="avgPrice">₹0</div><div class="stat-foot">Across all listed items</div></article><article class="stat-card"><div class="stat-top"><span>Active offers</span><span class="stat-icon mint">✦</span></div><div class="stat-value" id="activeOffers">0</div><div class="stat-foot">Promotions on your menu</div></article><article class="stat-card"><div class="stat-top"><span>Specials</span><span class="stat-icon amber">★</span></div><div class="stat-value" id="specialCount">0</div><div class="stat-foot">Chef's special selections</div></article></div>
+          <div class="panel table-panel"><div class="panel-heading"><div><h2>Price list</h2><p class="muted">Edit an item's price or mark it as a special.</p></div></div><div class="table-wrap"><table><thead><tr><th>ITEM</th><th>REGULAR PRICE</th><th>OFFER PRICE</th><th>DAILY SPECIAL</th><th>ACTIONS</th></tr></thead><tbody id="pricingTableBody"></tbody></table></div></div>
+          <div class="panel offers-panel"><div class="panel-heading"><div><h2>Current offers</h2><p class="muted">Promotions configured for your menu</p></div></div><div id="offersList" class="offers-list"></div></div>
+        </section>
+
+        <section class="page" id="page-inventory">
+          <div class="page-heading"><div><p class="eyebrow">STAY STOCKED</p><h1>Inventory</h1><p class="muted">Monitor ingredients and get ahead of low stock.</p></div><button class="btn btn-primary" data-action="add-ingredient">＋ Add ingredient</button></div>
+          <div class="stats-grid compact-stats"><article class="stat-card"><div class="stat-top"><span>Tracked ingredients</span><span class="stat-icon lilac">▧</span></div><div class="stat-value" id="inventoryCount">0</div><div class="stat-foot">Items in inventory</div></article><article class="stat-card"><div class="stat-top"><span>Low stock</span><span class="stat-icon amber">⚠</span></div><div class="stat-value" id="inventoryLow">0</div><div class="stat-foot">At or below reorder level</div></article><article class="stat-card"><div class="stat-top"><span>Out of stock</span><span class="stat-icon rose">!</span></div><div class="stat-value" id="inventoryOut">0</div><div class="stat-foot">Needs replenishment</div></article></div>
+          <div class="panel table-panel"><div class="toolbar"><div class="search-box"><span>⌕</span><input id="inventorySearch" type="search" placeholder="Search ingredients..."></div><select id="inventoryFilter"><option value="">All stock levels</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="healthy">Healthy</option></select></div><div class="table-wrap"><table><thead><tr><th>INGREDIENT</th><th>IN STOCK</th><th>REORDER LEVEL</th><th>STOCK LEVEL</th><th>LAST UPDATED</th><th>ACTIONS</th></tr></thead><tbody id="inventoryTableBody"></tbody></table></div></div>
+        </section>
+
+        <section class="page" id="page-dietary">
+          <div class="page-heading"><div><p class="eyebrow">CLEAR CHOICES</p><h1>Dietary tags</h1><p class="muted">Help guests choose food that suits their preferences.</p></div><button class="btn btn-primary" data-action="add-tag">＋ Add tag</button></div>
+          <div id="dietaryGrid" class="tag-management-grid"></div>
+        </section>
+
+        <section class="page" id="page-analytics">
+          <div class="page-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h1>Menu analytics</h1><p class="muted">Understand menu mix and sample item performance.</p></div><select id="analyticsPeriod" class="period-select"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div>
+          <div class="stats-grid"><article class="stat-card"><div class="stat-top"><span>Sample orders</span><span class="stat-icon rose">↗</span></div><div class="stat-value" id="sampleOrders">0</div><div class="stat-foot">Illustrative demo data</div></article><article class="stat-card"><div class="stat-top"><span>Sample revenue</span><span class="stat-icon mint">₹</span></div><div class="stat-value" id="sampleRevenue">₹0</div><div class="stat-foot">Not connected to real sales</div></article><article class="stat-card"><div class="stat-top"><span>Average item price</span><span class="stat-icon lilac">＄</span></div><div class="stat-value" id="analyticsAvgPrice">₹0</div><div class="stat-foot">Current listed prices</div></article><article class="stat-card"><div class="stat-top"><span>Special items</span><span class="stat-icon amber">★</span></div><div class="stat-value" id="analyticsSpecials">0</div><div class="stat-foot">Chef's special tag</div></article></div>
+          <div class="analytics-grid"><article class="panel chart-panel"><div class="panel-heading"><div><h2>Sample sales trend</h2><p class="muted">Illustrative revenue by day</p></div></div><canvas id="salesChart" height="230"></canvas></article><article class="panel chart-panel"><div class="panel-heading"><div><h2>Items by category</h2><p class="muted">Current menu distribution</p></div></div><div id="analyticsCategoryBars" class="category-bars"></div></article></div>
+          <div class="panel"><div class="panel-heading"><div><h2>Top dishes</h2><p class="muted">Sample popularity scores for demo purposes</p></div></div><div id="analyticsTopItems" class="popular-list"></div></div>
+        </section>
+
+        <section class="page" id="page-versions">
+          <div class="page-heading"><div><p class="eyebrow">EVERY CHANGE, TRACKED</p><h1>Version history</h1><p class="muted">Review recent changes and restore a saved menu snapshot.</p></div><button class="btn btn-primary" id="saveVersionBtn">＋ Save version</button></div>
+          <div class="version-note"><span>◷</span><div><strong>Menu snapshots</strong><p>MenuPro automatically records menu changes during this browser session and keeps a limited history locally.</p></div></div>
+          <div class="panel version-list" id="versionList"></div>
+        </section>
+
+        <section class="page" id="page-reports">
+          <div class="page-heading"><div><p class="eyebrow">YOUR RESTAURANT, AT A GLANCE</p><h1>Reports</h1><p class="muted">Export useful summaries for your restaurant operations.</p></div></div>
+          <div class="report-grid">
+            <article class="report-card"><div class="report-icon rose">☷</div><h2>Menu report</h2><p>Export menu items, categories, prices, tags, and availability to a CSV spreadsheet.</p><button class="btn btn-secondary full-width" id="reportMenuBtn">↓ Export menu CSV</button></article>
+            <article class="report-card"><div class="report-icon amber">▧</div><h2>Inventory report</h2><p>Export ingredient stock, reorder thresholds, and stock status for purchasing.</p><button class="btn btn-secondary full-width" id="reportInventoryBtn">↓ Export inventory CSV</button></article>
+            <article class="report-card"><div class="report-icon lilac">◷</div><h2>Version report</h2><p>Download a list of saved menu snapshots and their timestamps.</p><button class="btn btn-secondary full-width" id="reportVersionsBtn">↓ Export history CSV</button></article>
+            <article class="report-card"><div class="report-icon mint">⎙</div><h2>Printable menu</h2><p>Open a clean, print-friendly view of the current customer-facing menu.</p><button class="btn btn-secondary full-width" id="reportPrintBtn">⎙ Print menu</button></article>
+          </div>
+        </section>
+      </div>
+      <footer class="app-footer"><span>© 2026 MenuPro</span><span>Made with <b>♥</b> for hospitality</span></footer>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading"><div><p class="eyebrow">MENUPRO WORKSPACE</p><h2 id="modalTitle">Add menu item</h2></div><button class="icon-button" id="modalClose" aria-label="Close">×</button></div>
+      <form id="modalForm"><div id="modalBody" class="modal-body"></div><div class="modal-actions"><button type="button" class="btn btn-secondary" id="modalCancel">Cancel</button><button type="submit" class="btn btn-primary" id="modalSave">Save changes</button></div></form>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
